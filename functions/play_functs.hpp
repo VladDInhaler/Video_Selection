@@ -32,14 +32,17 @@ inline void play_from_index(int video_index, const std::vector<std::string>& vid
 }
 
 
-inline void try_easter_Eggs(const std::vector<std::string> &easter_egg_Names, const std::vector<std::vector<std::string>> &easter_egg_Videos, auto input) {
-    //loop through the vector of numbers
-    for (int i = 0; i < easter_egg_Names.size(); i++) {
-        //if input matches the content of the index then...
+inline void try_easter_Eggs(const std::vector<std::string> &easter_egg_Names, const std::vector<std::vector<std::string>> &easter_egg_Videos, std::string &default_video, std::string &input) {
+    //loop through the vector of easter egg names
+    for(int i = 0; i < easter_egg_Names.size(); i++) {
+        //if input matches the string of the index then...
         if (input == easter_egg_Names[i]) {
             //call play function by giving it the path from the paths vektor with the same index
             //currently choosing the first video file to play so no random easter egg video so far
-            play_from_path(input, easter_egg_Videos[i][0]);
+            if (!easter_egg_Videos[i].empty()) {
+                play_from_path(easter_egg_Videos[i][0], default_video);
+                std::cout << "playing " << easter_egg_Videos[i][0] << std::endl;
+            }
         }
     }
 }
