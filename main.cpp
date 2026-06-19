@@ -10,14 +10,13 @@
 #include "functions/play_functs.hpp"
 #include "functions/config_functs.hpp"
 
-//folder path must be set to correct video directory path
-//the first video to be added to the folder will have the index 0 and will be played when dialing a 0
+//config.cfg must be set to the correct paths
+//the first video to be added to the video direcorie will have the index 0 and will be played when dialing a 0
 //the second vid tba will have index 1 and ongoing
 
-//easter eggs are added by putting a subdirectory in the video directory
-//the folder name will be the number to dial and find the easter egg
+//easter eggs are added by putting a subdirectory with a video in it, in the video directory
+//the sub directories name will be the number to dial and then the video in thi dir is played
 
-//programm currently only works on pi os
 
 
 int main() {
@@ -25,7 +24,6 @@ int main() {
     std::cout << "  program running" << std::endl;
 
     load_cfg (folder_path, input_pipe_path);
-
     std::string default_video_file_path = load_default_video_file_path(folder_path);
 
     load_videos_from_folder(folder_path, video_file_paths); //load the video files into the vector
@@ -38,23 +36,25 @@ int main() {
         std::string input;
         //if (std::cin.rdbuf()->in_avail() > 0 || std::getline(std::cin, input)) {
         if (std::getline(std::cin, input)) { //testing this right now
-            // Hier steht deine ganz normale if-else Logik für den Input!
 
 
             std::cout << input << std::endl;
 
-            if (input == "") {
-            }
+            if (input == "") { }
 
-            //playing video if input is correct
+            //playing video if exists for the input
             else if (input.length() == 1 && std::isdigit(static_cast<unsigned char>(input[0]))) {
                 int video_index = stoi(input); //converting input string to integer video index
                 play_from_index(video_index, video_file_paths, default_video_file_path); //starting the function with the index of the user input
             }
+            //playing hidden easter egg video if input matches their dir name
             else if (input.length() > 1 && std::isdigit(static_cast<unsigned char>(input[0]))) {
-                try_easter_Eggs (easter_egg_Names, easter_egg_Videos, input);
+                try_easter_Eggs (easter_egg_Names, easter_egg_Videos, default_video_file_path, input);
             }
             //if not one of those inputs throw try again error phrase
+            else if (input == "q" || input == "quit") {
+                program_running = false;
+            }
             else {
                 std::cout << "  invalid input, please try again" << std::endl;
 
