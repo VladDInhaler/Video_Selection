@@ -9,6 +9,7 @@
 #include <fstream>
 #include <algorithm>
 #include <fcntl.h>
+#include <map>
 #include <unistd.h>
 
 #include "../structures/paths.hpp"
@@ -117,18 +118,13 @@ inline void load_easter_Eggs(
         if (fs::is_directory(dir_entry)) {
             //for later perfectionising when everything works
             //std::vector <std::string> found_in_this_dir;
-
-
             //save the subdirectories name
             std::string dir_Name = dir_entry.path().filename().string();
-
             //save directory(easter egg) name in a vector
             easter_eggs_Names.push_back(dir_Name);
-
-            //add empty vector to inner 2d vec
+            std::cout << "found hidden easter egg: " << dir_Name << std::endl;
+            //add empty vector to inner 2d vectors
             easter_egg_Videos.emplace_back();
-
-
             //loop through the sub directory files
             for (const auto &file_entry: fs::directory_iterator(dir_entry.path())) {
                 //checking current file in the directory is a video
@@ -139,14 +135,31 @@ inline void load_easter_Eggs(
                     if (ext == ".mp4" or ext == ".mkv") {
                         //saving file path to the vector in the vector
                         easter_egg_Videos.back().emplace_back(std::move(video_path));
+                        std::cout << easter_egg_Videos.back().back() << std::endl;
                     }
                 }
             }
         }
     }
     already_loaded = true;
+    std::cout << "easter eggs loaded" << std::endl;
 }
 
+inline void load_easter_eggs_map (std::string &folder_path, std::map<std::string, std::string> &easter_eggs) {
+    for (const auto &dir_entry: fs::directory_iterator(folder_path)) { //loop trough sub dirs
+        if (fs::is_directory(dir_entry)) {
+            std::string temp_dir_Name = dir_entry.path().filename().string();
+            for (const auto &file_entry : fs::directory_iterator(dir_entry.path())) { //loop trough videos of sub dir
+                if (fs::is_regular_file(file_entry)) { //if file is mp4
+                    //store temp_dir_name key in the map
+                    //store in the map with the key of its director
+                    std::string video_path = file_entry.path().string();
+                    easter_eggs.insert({temp_dir_Name, video_path});
+                }
+            }
+        }
+    }
+}
 
 
 #endif //PI_PROGRAMM_LOAD_FUNCTS_HPP

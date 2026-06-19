@@ -5,10 +5,12 @@
 #ifndef PI_PROGRAMM_PLAY_FUNCTS_HPP
 #define PI_PROGRAMM_PLAY_FUNCTS_HPP
 #include <iostream>
+#include <map>
 #include <ostream>
 #include <stdexcept>
 #include <string>
 #include <vector>
+
 
 #include "start_programs.hpp"
 #include "../structures/data_structures.hpp"
@@ -47,4 +49,13 @@ inline void try_easter_Eggs(const std::vector<std::string> &easter_egg_Names, co
     }
 }
 
+    // alternative approach for with std::map except of 2 vektors
+inline void try_easter_eggs_map (std::string &input) {
+    std::map<std::string, std::string> easter_eggs;
+
+    if (easter_eggs.find(input) != easter_eggs.end()) {
+        std::cout << easter_eggs[input] << std::endl;
+        //CALL PLAY FUNCTION
+    }
+}
 #endif //PI_PROGRAMM_PLAY_FUNCTS_HPP
